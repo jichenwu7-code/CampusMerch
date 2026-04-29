@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ZhyController;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WjcController;
 use App\Http\Controllers\ZhyController;
