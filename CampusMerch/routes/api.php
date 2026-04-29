@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WjcController;
+use App\Http\Controllers\ZhyController;
 
 // 公共接口
 Route::get('/products', [WjcController::class, 'productList']);
