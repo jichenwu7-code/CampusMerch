@@ -27,8 +27,4 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     // 统计和日志
     Route::get('/stats', [WjcController::class, 'adminStats']);
     Route::get('/logs', [WjcController::class, 'operationLogs']);
-<<<<<<< Updated upstream
 });
-=======
-});
->>>>>>> Stashed changes
