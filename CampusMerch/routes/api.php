@@ -4,6 +4,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WjcController;
 use App\Http\Controllers\ZhyController;
+use App\Http\Controllers\GyzController;
 
 // ========== 认证接口（zhy）- 公共 ==========
 Route::post('/send-verify-code', [ZhyController::class, 'sendVerifyCode']);
@@ -42,4 +43,18 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::get('/stats', [WjcController::class, 'adminStats']);
     Route::get('/logs', [WjcController::class, 'operationLogs']);
 
+    Route::middleware('auth:sanctum')->group(function () {
+
+        // 订单
+        Route::post('/orders', [GyzController::class, 'storeOrder']); // 提交预订单
+        Route::get('/my/orders', [GyzController::class, 'myOrders']); // 我的订单
+        Route::post('/orders/{id}/design', [GyzController::class, 'uploadDesign']); // 上传定制稿
+        Route::post('/orders/{id}/complete', [GyzController::class, 'completeOrder']); // 确认收货
+
+        // 收藏
+        Route::get('/my/collections', [GyzController::class, 'myCollections']); // 我的收藏
+        Route::post('/my/collections', [GyzController::class, 'storeCollection']); // 收藏商品
+        Route::delete('/my/collections/{product_id}', [GyzController::class, 'destroyCollection']); // 取消收藏
+
+    });
 });
