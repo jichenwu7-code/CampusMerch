@@ -9,15 +9,23 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // 普通用户（用于测试注册/登录）
+        // 你本地的用户 zhy
         User::create([
-            'name' => '测试用户',
-            'email' => 'test@example.com',
-            'password' => '123456',   // 模型自动哈希
+            'name' => 'zhy',
+            'email' => '3090124130@qq.com',
+            'password' => 'newpass123',  // 如 123456
             'role' => 'user',
         ]);
 
-        // 管理员（用于之后管理员接口测试）
+        // 测试用户
+        User::create([
+            'name' => '测试用户',
+            'email' => 'test@example.com',
+            'password' => '123456',
+            'role' => 'user',
+        ]);
+
+        // 管理员
         User::create([
             'name' => '管理员',
             'email' => 'admin@example.com',
