@@ -9,8 +9,8 @@ Route::get('/products/{id}', [WjcController::class, 'productDetail']);
 Route::get('/home/stats', [WjcController::class, 'homeStats']);
 Route::get('/custom-rules', [WjcController::class, 'customRules']);
 
-// 管理员接口
-Route::prefix('admin')->group(function () {
+// 管理员接口（需要登录）
+Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     // 商品相关
     Route::post('/products/import', [WjcController::class, 'importProducts']);
     Route::put('/products/{id}', [WjcController::class, 'updateProduct']);
@@ -27,4 +27,8 @@ Route::prefix('admin')->group(function () {
     // 统计和日志
     Route::get('/stats', [WjcController::class, 'adminStats']);
     Route::get('/logs', [WjcController::class, 'operationLogs']);
+<<<<<<< Updated upstream
 });
+=======
+});
+>>>>>>> Stashed changes
