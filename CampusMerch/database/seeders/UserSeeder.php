@@ -9,28 +9,25 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // 你本地的用户 zhy
-        User::create([
-            'name' => 'zhy',
-            'email' => '3090124130@qq.com',
-            'password' => 'newpass123',  // 如 123456
-            'role' => 'user',
-        ]);
+        $users = [
+            [
+                'name' => 'zhy',
+                'email' => '3090124130@qq.com',
+                'password' => 'newpass123',       // 你重置后的密码
+                'role' => 'user',
+                'mobile' => '13800138000',
+            ],
+            [
+                'name' => 'wjc',
+                'email' => 'wjc20070117@qq.com',
+                'password' => '123456',    // 请替换为她注册时用的密码
+                'role' => 'admin',
+                'mobile' => null,
+            ],
+        ];
 
-        // 测试用户
-        User::create([
-            'name' => '测试用户',
-            'email' => 'test@example.com',
-            'password' => '123456',
-            'role' => 'user',
-        ]);
-
-        // 管理员
-        User::create([
-            'name' => '管理员',
-            'email' => 'admin@example.com',
-            'password' => 'admin123',
-            'role' => 'admin',
-        ]);
+        foreach ($users as $user) {
+            User::create($user);
+        }
     }
 }
