@@ -10,7 +10,7 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'category', 'type', 'spec', 'price', 'stock', 
+        'name', 'category', 'type', 'spec', 'price', 'stock',
         'reserved_qty', 'cover_url', 'custom_rule', 'sold_count', 'status'
     ];
 
@@ -23,6 +23,8 @@ class Product extends Model
     ];
 
     // 库存预警判断
+
+
     public function getStockWarningAttribute()
     {
         return $this->stock <= 10; // 库存≤10触发预警
