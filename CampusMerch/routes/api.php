@@ -43,18 +43,20 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::get('/stats', [WjcController::class, 'adminStats']);
     Route::get('/logs', [WjcController::class, 'operationLogs']);
 
-    Route::middleware('auth:sanctum')->group(function () {
-
-        // 订单
-        Route::post('/orders', [GyzController::class, 'storeOrder']); // 提交预订单
-        Route::get('/my/orders', [GyzController::class, 'myOrders']); // 我的订单
-        Route::post('/orders/{id}/design', [GyzController::class, 'uploadDesign']); // 上传定制稿
-        Route::post('/orders/{id}/complete', [GyzController::class, 'completeOrder']); // 确认收货
-
-        // 收藏
-        Route::get('/my/collections', [GyzController::class, 'myCollections']); // 我的收藏
-        Route::post('/my/collections', [GyzController::class, 'storeCollection']); // 收藏商品
-        Route::delete('/my/collections/{product_id}', [GyzController::class, 'destroyCollection']); // 取消收藏
-
+    Route::middleware('auth:api')->group(function () {
+        // 1. 创建预订单
+        Route::post('orders', [GyzController::class, 'storeOrder']);
+        // 2. 订单上传设计稿
+        Route::post('orders/{id}/design', [GyzController::class, 'uploadDesign']);
+        // 3. 用户确认收货
+        Route::post('orders/{id}/complete', [GyzController::class, 'confirmComplete']);
+        // 4. 获取我的订单列表
+        Route::get('my/orders', [GyzController::class, 'myOrders']);
+        // 5. 获取我的收藏列表
+        Route::get('my/collections', [GyzController::class, 'myCollections']);
+        // 6. 添加商品收藏
+        Route::post('my/collections', [GyzController::class, 'addCollection']);
+        // 7. 取消商品收藏
+        Route::delete('my/collections/{productId}', [GyzController::class, 'removeCollection']);
     });
 });
