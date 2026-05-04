@@ -13,7 +13,10 @@ class Order extends Model
         'user_id',
         'product_id',
         'qty',
+        'preference',   // JSON 字符串
+        'remark',
         'status',
+        'design_url',
         'reviewed_at',
     ];
 

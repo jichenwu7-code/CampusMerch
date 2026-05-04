@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="LaravelPint">
+    <laravel_pint_settings>
+      <LaravelPintConfiguration tool_path="$PROJECT_DIR$/CampusMerch/vendor/bin/pint" />
+    </laravel_pint_settings>
+  </component>
   <component name="MessDetectorOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>
@@ -88,6 +93,38 @@
       <path value="$PROJECT_DIR$/CampusMerch/vendor/guzzlehttp/guzzle" />
       <path value="$PROJECT_DIR$/CampusMerch/vendor/guzzlehttp/uri-template" />
       <path value="$PROJECT_DIR$/CampusMerch/vendor/vlucas/phpdotenv" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/hamcrest/hamcrest-php" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/filp/whoops" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/staabm/side-effects-detector" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/sebastian/cli-parser" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/mockery/mockery" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/sebastian/complexity" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/sebastian/object-enumerator" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/sebastian/object-reflector" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/sebastian/lines-of-code" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/phar-io/manifest" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/sebastian/type" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/phpunit/php-invoker" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/myclabs/deep-copy" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/laravel/pail" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/laravel/pint" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/fakerphp/faker" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/laravel/sanctum" />
+      <path value="$PROJECT_DIR$/CampusMerch/vendor/nunomaduro/collision" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.3" />
