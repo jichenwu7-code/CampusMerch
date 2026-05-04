@@ -8,6 +8,8 @@ use App\Models\AuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use App\Imports\ProductsImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class WjcController
 {
@@ -24,10 +26,10 @@ class WjcController
          if ($request->has('status')) {
             $query->where('status', $request->status);
         }
-        if ($request->has('min_price')) {
+        if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->min_price);
         }
-        if ($request->has('max_price')) {
+        if ($request->filled('max_price')) {
             $query->where('price', '<=', $request->max_price);
         }
         if ($request->has('keyword')) {
@@ -261,7 +263,7 @@ class WjcController
                 'today_order_count' => Order::whereDate('created_at', today())->count(),
                 'pending_review_count' => Order::where('status', 'reviewing')->count(),
                 'stock_warning_products' => Product::where('stock', '<=', 10)->get(['id', 'name', 'stock']),
-                'total_sales_amount' => Order::whereIn('status', ['completed', 'ready'])
+                'total_sales_amount' => Order::whereIn('orders.status', ['completed', 'ready'])
                     ->join('products', 'orders.product_id', '=', 'products.id')
                     ->sum(DB::raw('products.price * orders.qty'))
             ];
@@ -446,39 +448,16 @@ class WjcController
     {
         try {
             $validated = $request->validate([
-                'products' => 'required|array|min:1',
-                'products.*.name' => 'required|string|max:255',
-                'products.*.category' => 'required|string|max:100',
-                'products.*.price' => 'required|numeric|min:0',
-                'products.*.stock' => 'nullable|integer|min:0',
-                'products.*.status' => 'nullable|integer|in:0,1',
-                'products.*.cover_url' => 'nullable|string|max:500',
-                'products.*.custom_rule' => 'nullable|string|max:1000',
+                'file' => 'required|file|mimes:xlsx,xls,csv|max:2048',
             ]);
 
-            $importedCount = 0;
-            $errors = [];
-
-            DB::transaction(function () use ($request, &$importedCount) {
-                foreach ($request->products as $index => $productData) {
-                    Product::create([
-                        'name' => $productData['name'],
-                        'category' => $productData['category'],
-                        'price' => $productData['price'],
-                        'stock' => $productData['stock'] ?? 0,
-                        'status' => $productData['status'] ?? 1,
-                        'cover_url' => $productData['cover_url'] ?? null,
-                        'custom_rule' => $productData['custom_rule'] ?? null,
-                    ]);
-                    $importedCount++;
-                }
-            });
+            $import = new ProductsImport();
+            Excel::import($import, $request->file('file'));
 
             return response()->json([
                 'code' => 200,
                 'message' => '导入成功',
-                'data' => ['imported_count' => $importedCount],
-                'errors' => $errors
+                'data' => ['imported_count' => $import->getRowCount()],
             ]);
         } catch (ValidationException $e) {
             return response()->json([
@@ -494,7 +473,7 @@ class WjcController
                 'data' => null,
                 'errors' => [$e->getMessage()]
             ], 500);
-        }
+        }   
     }
 
     // 管理员手动核销订单
@@ -561,6 +540,7 @@ class WjcController
         }
     }
 
+
     // 用户管理列表
     public function userList(Request $request)
     {
@@ -609,7 +589,4 @@ class WjcController
             ], 500);
         }
     }
-
 }
-
-?>
