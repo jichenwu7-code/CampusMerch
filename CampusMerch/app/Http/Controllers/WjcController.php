@@ -18,12 +18,19 @@ class WjcController
     //商品列表
     public function productList(Request $request)
     {
+        // 调试：查看总记录数
+        $totalCount = Product::count();
+        logger()->info('Total products in DB: ' . $totalCount);
+        logger()->info('Request params: ', $request->all());
+        
+        // 暂时不使用任何过滤，直接查询所有
         $query = Product::query();
-
-        if($request->has('category')){
+        
+        // 只有当参数有实际值时才过滤
+        if($request->filled('category')){
             $query->where('category', $request->category);
         }
-         if ($request->has('status')) {
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
         if ($request->filled('min_price')) {
@@ -32,11 +39,14 @@ class WjcController
         if ($request->filled('max_price')) {
             $query->where('price', '<=', $request->max_price);
         }
-        if ($request->has('keyword')) {
+        if ($request->filled('keyword')) {
             $query->where('name', 'like', "%{$request->keyword}%");
         }
 
         $list = $query->paginate($request->per_page ?? 20);
+        
+        logger()->info('Query SQL: ' . $query->toSql());
+        logger()->info('Query result count: ' . $list->total());
 
         return response()->json([
             'code'=>200,
@@ -45,7 +55,8 @@ class WjcController
                 'list' => $list->items(),
                 'total' => $list->total(),
                 'page' => $list->currentPage(),
-                'per_page' => $list->perPage()
+                'per_page' => $list->perPage(),
+                'debug_total_in_db' => $totalCount
             ]
         ]);
     }
@@ -159,9 +170,14 @@ class WjcController
                 ], 404);
             }
 
-            $product->fill($request->only([
+            // 只更新有值的字段
+            $updateData = array_filter($request->only([
                 'name', 'category', 'price', 'stock', 'status', 'custom_rule'
-            ]));
+            ]), function($value) {
+                return $value !== null;
+            });
+            
+            $product->fill($updateData);
             $product->version = ($product->version ?? 0) + 1;
             $product->save();
 
