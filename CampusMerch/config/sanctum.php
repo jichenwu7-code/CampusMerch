@@ -48,6 +48,7 @@ return [
     */
 
     'expiration' => null,
+    'token_length' => env('SANCTUM_TOKEN_LENGTH', 80),
 
     /*
     |--------------------------------------------------------------------------
