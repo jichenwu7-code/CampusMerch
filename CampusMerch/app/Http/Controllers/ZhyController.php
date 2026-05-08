@@ -135,6 +135,54 @@ class ZhyController extends Controller
         ]);
     }
 
+    // 验证码登录
+    public function loginByCode(Request $request)
+    {
+        $request->validate([
+            'email'      => 'required|email',
+            'verify_code' => 'required|digits:6'
+        ]);
+
+        $email = $request->email;
+        $code  = $request->verify_code;
+
+        // 1. 校验验证码
+        $codeKey = "verify_code:{$email}:login";
+        $cached  = Cache::get($codeKey);
+
+        if (!$cached || $cached != $code) {
+            return response()->json([
+                'code'    => 422,
+                'message' => '验证码错误或已过期'
+            ], 422);
+        }
+
+        // 2. 查找用户（不允许自动注册）
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            return response()->json([
+                'code'    => 404,
+                'message' => '该邮箱未注册'
+            ], 404);
+        }
+
+        // 3. 验证通过，删除验证码（防止重用）
+        Cache::forget($codeKey);
+
+        // 4. 生成 token 并返回
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        return response()->json([
+            'code'    => 200,
+            'message' => '登录成功',
+            'data'    => [
+                'token'   => $token,
+                'user_id' => $user->id,
+                'role'    => $user->role,
+            ]
+        ]);
+    }
+
     // 校验验证码（独立接口）
     public function verifyCodeCheck(Request $request)
     {
