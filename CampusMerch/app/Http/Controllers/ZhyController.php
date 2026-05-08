@@ -35,34 +35,42 @@ class ZhyController extends Controller
         $code = random_int(100000, 999999);
         $ttl = 300;
 
+        // 写入缓存并立即验证
         Cache::put("verify_code:{$email}:{$scene}", $code, now()->addSeconds($ttl));
         Cache::put($rateKey, true, now()->addMinute());
 
-        // 发送邮件
-        try {
-            Mail::raw("您的验证码是：{$code}，有效期{$ttl}秒。", function ($message) use ($email) {
-                $message->to($email)->subject('验证码');
-            });
-        } catch (\Exception $e) {
-            return response()->json(['code' => 500, 'message' => '邮件发送失败，请检查配置'], 500);
-        }
+        // 调试日志（可选）
+        \Log::info('验证码已写入', [
+        'key' => "verify_code:{$email}:{$scene}",
+        'code' => $code,
+        'cached' => Cache::get("verify_code:{$email}:{$scene}")
+    ]);
 
-        // 每日剩余次数（简单限流）
-        $dailyKey = "verify_daily:{$email}:" . now()->toDateString();
-        $count = Cache::get($dailyKey, 0);
-        Cache::put($dailyKey, $count + 1, now()->endOfDay());
-        $remain = max(0, 5 - ($count + 1));
-
-        return response()->json([
-            'code' => 200,
-            'message' => "验证码已发送至邮箱{$email}，请注意查收",
-            'data' => [
-                'email' => $email,
-                'expire_time' => $ttl,
-                'remain_count' => $remain
-            ]
-        ]);
+    // 发送邮件
+    try {
+        Mail::raw("您的验证码是：{$code}，有效期{$ttl}秒。", function ($message) use ($email) {
+            $message->to($email)->subject('验证码');
+        });
+    } catch (\Exception $e) {
+        return response()->json(['code' => 500, 'message' => '邮件发送失败，请检查配置'], 500);
     }
+
+    // 每日剩余次数
+    $dailyKey = "verify_daily:{$email}:" . now()->toDateString();
+    $count = Cache::get($dailyKey, 0);
+    Cache::put($dailyKey, $count + 1, now()->endOfDay());
+    $remain = max(0, 5 - ($count + 1));
+
+    return response()->json([
+        'code' => 200,
+        'message' => "验证码已发送至邮箱{$email}，请注意查收",
+        'data' => [
+            'email' => $email,
+            'expire_time' => $ttl,
+            'remain_count' => $remain
+        ]
+    ]);
+}
 
     // 注册
     public function register(Request $request)
