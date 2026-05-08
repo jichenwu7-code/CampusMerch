@@ -281,25 +281,26 @@ class GyzController extends Controller
             'errors' => [],
         ]);
     }
+    //8. 上传头像
     public function uploadAvatar(Request $request)
     {
-        // 1. 校验文件
+        // 校验文件
         $request->validate([
             'avatar' => 'required|image|mimes:jpg,png|max:5120', // 限制 5MB
         ]);
 
-        // 2. 获取当前用户
+        // 获取当前用户
         $user = auth()->user();
 
-        // 3. 保存头像文件到 public 盘
+        // 保存头像文件到 public 盘
         $path = $request->file('avatar')->store('avatars', 'public');
 
-        // 4. 更新用户头像URL
+        // 更新用户头像URL
         $user->update([
             'avatar_url' => Storage::url($path),
         ]);
 
-        // 5. 返回成功响应
+        // 返回成功响应
         return response()->json([
             'code' => 200,
             'message' => '头像上传成功',
