@@ -42,8 +42,8 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     // 统计和日志
     Route::get('/stats', [WjcController::class, 'adminStats']);
     Route::get('/logs', [WjcController::class, 'operationLogs']);
-
-    Route::middleware('auth:api')->group(function () {
+});
+    Route::middleware('auth:sanctum')->group(function () {
         // 1. 创建预订单
         Route::post('orders', [GyzController::class, 'storeOrder']);
         // 2. 订单上传设计稿
@@ -58,5 +58,6 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
         Route::post('my/collections', [GyzController::class, 'addCollection']);
         // 7. 取消商品收藏
         Route::delete('my/collections/{productId}', [GyzController::class, 'removeCollection']);
-    });
+        Route::post('/my/avatar', [GyzController::class, 'uploadAvatar']);
 });
+
