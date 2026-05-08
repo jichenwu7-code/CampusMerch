@@ -46,10 +46,59 @@ class ZhyController extends Controller
         'cached' => Cache::get("verify_code:{$email}:{$scene}")
     ]);
 
+    // 构建 HTML 邮件
+    $html = <<<HTML
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>验证码</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f4f4; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width:540px; margin:30px auto; background-color:#ffffff; border:1px solid #e0e0e0;">
+        <!-- 头部 -->
+        <tr>
+            <td style="padding:20px 30px 0 30px;">
+                <h2 style="margin:0; font-size:22px; color:#1a1a1a;">CampusMerch</h2>
+                <p style="margin:4px 0 0 0; font-size:13px; color:#666;">校园文创预订系统</p>
+                <hr style="border:0; border-top:1px solid #eee; margin:16px 0 0 0;">
+            </td>
+        </tr>
+        <!-- 主体信息 -->
+        <tr>
+            <td style="padding:20px 30px;">
+                <p style="margin:0 0 10px 0; font-size:15px; color:#333;">您好，</p>
+                <p style="margin:0 0 20px 0; font-size:14px; color:#555;">您请求的验证码如下，请在 <strong style="color:#e67e22;">{$ttl}秒</strong> 内完成验证：</p>
+
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="border:2px solid #1a56db; border-radius:6px; background-color:#f0f5ff;">
+                    <tr>
+                        <td style="padding:18px 20px; text-align:center;">
+                            <span style="font-size:30px; font-weight:bold; letter-spacing: 10px; color:#1a56db;">{$code}</span>
+                        </td>
+                    </tr>
+                </table>
+
+                <p style="margin:20px 0 0 0; font-size:13px; color:#777;">验证码仅用于本次操作，请勿泄露给他人。</p>
+            </td>
+        </tr>
+        <!-- 底部致谢 -->
+        <tr>
+            <td style="padding:20px 30px; background-color:#fafafa; border-top:1px solid #eee;">
+                <p style="margin:0; font-size:12px; color:#999;">
+                    感谢您的使用，祝您生活愉快！<br>
+                    此邮件由系统自动发送，请勿回复。
+                </p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+HTML;
+
     // 发送邮件
     try {
-        Mail::raw("您的验证码是：{$code}，有效期{$ttl}秒。", function ($message) use ($email) {
-            $message->to($email)->subject('验证码');
+        Mail::html($html, function ($message) use ($email) {
+            $message->to($email)->subject('【CampusMerch】电子验证码');
         });
     } catch (\Exception $e) {
         return response()->json(['code' => 500, 'message' => '邮件发送失败，请检查配置'], 500);
