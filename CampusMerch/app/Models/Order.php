@@ -21,6 +21,13 @@ class Order extends Model
     ];
 
     protected $casts = [
+        'preference' => 'array', // 自动把 JSON 转为数组
         'reviewed_at' => 'datetime',
     ];
+
+    public function product()
+    {
+        // 订单 belongsTo 商品，外键是 product_id
+        return $this->belongsTo(Product::class);
+    }
 }

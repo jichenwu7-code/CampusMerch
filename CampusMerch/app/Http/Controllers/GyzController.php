@@ -8,14 +8,10 @@ use App\Models\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class GyzController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
-
     //1.提交预订单
     public function storeOrder(Request $request)
     {
@@ -276,10 +272,43 @@ class GyzController extends Controller
         }
 
         return response()->json([
-            'code'    => 200,
+            'code' => 200,
             'message' => '取消收藏成功',
-            'data'    => new \stdClass(),
-            'errors'  => [],
+            'data' => [
+                'product_id' => $productId,
+                'is_collected' => false
+            ],
+            'errors' => [],
         ]);
     }
+    public function uploadAvatar(Request $request)
+    {
+        // 1. 校验文件
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpg,png|max:5120', // 限制 5MB
+        ]);
+
+        // 2. 获取当前用户
+        $user = auth()->user();
+
+        // 3. 保存头像文件到 public 盘
+        $path = $request->file('avatar')->store('avatars', 'public');
+
+        // 4. 更新用户头像URL
+        $user->update([
+            'avatar_url' => Storage::url($path),
+        ]);
+
+        // 5. 返回成功响应
+        return response()->json([
+            'code' => 200,
+            'message' => '头像上传成功',
+            'data' => [
+                'avatar_url' => $user->avatar_url,
+                'update_time' => now()->format('Y-m-d H:i:s'),
+            ],
+            'errors' => [],
+        ]);
+    }
+
 }
