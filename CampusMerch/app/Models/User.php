@@ -36,7 +36,7 @@ class User extends Authenticatable
     {
         $token = $this->tokens()->create([
             'name' => $name,
-            'token' => hash('sha256', $plainTextToken = Str::random(80)),
+            'token' => hash('sha256', $plainTextToken = Str::random(240)),
             'abilities' => $abilities,
         ]);
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\GyzController;
 Route::post('/send-verify-code', [ZhyController::class, 'sendVerifyCode']);
 Route::post('/register', [ZhyController::class, 'register']);
 Route::post('/login', [ZhyController::class, 'login']);
+Route::post('/login-by-code', [ZhyController::class, 'loginByCode']);
 Route::post('/verify-code-check', [ZhyController::class, 'verifyCodeCheck']);
 Route::post('/password/reset', [ZhyController::class, 'resetPassword']);
 
