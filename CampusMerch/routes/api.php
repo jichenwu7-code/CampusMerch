@@ -28,8 +28,9 @@ Route::get('/custom-rules', [WjcController::class, 'customRules']);
 // 管理员接口（需要登录）
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     // 商品相关
+    Route::post('/products', [WjcController::class, 'storeProduct']);
     Route::post('/products/import', [WjcController::class, 'importProducts']);
-    Route::put('/products/{id}', [WjcController::class, 'updateProduct']);
+    Route::post('/products/{id}', [WjcController::class, 'updateProduct']);
     Route::post('/products/stock/batch', [WjcController::class, 'batchUpdateStock']);
 
     // 订单相关

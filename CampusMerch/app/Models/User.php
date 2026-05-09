@@ -32,14 +32,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function createToken(string $name, array $abilities = ['*'])
-    {
-        $token = $this->tokens()->create([
-            'name' => $name,
-            'token' => hash('sha256', $plainTextToken = Str::random(240)),
-            'abilities' => $abilities,
-        ]);
-
-        return new NewAccessToken($token, $token->getKey().'|'.$plainTextToken);
-    }
+    // 使用 Sanctum 默认的 createToken 方法，不需要自定义
 }

@@ -138,6 +138,56 @@ class WjcController
 
     // 管理员接口
 
+    // 新增商品
+    public function storeProduct(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'category' => 'required|string|max:100',
+                'price' => 'required|numeric|min:0',
+                'stock' => 'required|integer|min:0',
+                'status' => 'nullable|integer|in:0,1',
+                'custom_rule' => 'nullable|string|max:1000',
+                'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
+            $data = $request->only(['name', 'category', 'price', 'stock', 'status', 'custom_rule']);
+            $data['status'] = $data['status'] ?? 1;
+            
+            // 处理图片上传
+            if ($request->hasFile('cover_image')) {
+                $image = $request->file('cover_image');
+                $filename = 'products/' . time() . '_' . $image->getClientOriginalName();
+                $image->storeAs('public', $filename);
+                $data['cover_url'] = '/storage/' . $filename;
+            }
+
+            $product = Product::create($data);
+
+            return response()->json([
+                'code' => 200,
+                'message' => '商品创建成功',
+                'data' => ['id' => $product->id],
+                'errors' => []
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'code' => 422,
+                'message' => '参数验证失败',
+                'data' => null,
+                'errors' => $e->validator->errors()->all()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'message' => '创建失败：' . $e->getMessage(),
+                'data' => null,
+                'errors' => [$e->getMessage()]
+            ], 500);
+        }
+    }
+
     // 修改商品信息
     public function updateProduct(Request $request, $id)
     {
@@ -158,6 +208,7 @@ class WjcController
                 'stock' => 'nullable|integer|min:0',
                 'status' => 'nullable|integer|in:0,1',
                 'custom_rule' => 'nullable|string|max:1000',
+                'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             $product = Product::find($id);
@@ -176,6 +227,14 @@ class WjcController
             ]), function($value) {
                 return $value !== null;
             });
+            
+            // 处理图片上传
+            if ($request->hasFile('cover_image')) {
+                $image = $request->file('cover_image');
+                $filename = 'products/' . time() . '_' . $image->getClientOriginalName();
+                $image->storeAs('public', $filename);
+                $updateData['cover_url'] = '/storage/' . $filename;
+            }
             
             $product->fill($updateData);
             $product->version = ($product->version ?? 0) + 1;
