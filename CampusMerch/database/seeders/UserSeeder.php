@@ -24,6 +24,13 @@ class UserSeeder extends Seeder
                 'role' => 'admin',
                 'mobile' => null,
             ],
+            [
+                'name' => 'gyz',
+                'email' => '2200417929@qq.com',
+                'password' => '032411',    // 请替换为她注册时用的密码
+                'role' => 'user',
+                'mobile' => null,
+            ]
         ];
 
         foreach ($users as $user) {
