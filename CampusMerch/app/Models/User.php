@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password', 'role', 'mobile', 'avatar_url'])]
+#[Fillable(['name', 'email', 'password', 'role', 'mobile', 'avatar_url', 'address'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
