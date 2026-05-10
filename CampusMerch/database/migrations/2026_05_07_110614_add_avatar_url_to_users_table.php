@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::table('users', function (Blueprint $table) {
-          $table->string('role', 20)->default('user')->after('password');
-       });
+        Schema::table('users', function (Blueprint $table) {
+            //
+            $table->string('avatar_url')->nullable()->comment('用户头像URL');
+        });
     }
 
     /**
@@ -21,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-       Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+        Schema::table('users', function (Blueprint $table) {
+            //
+            $table->dropColumn('avatar_url');
         });
     }
 };
