@@ -40,7 +40,7 @@ class ZhyController extends Controller
         Cache::put($rateKey, true, now()->addMinute());
 
         // 调试日志（可选）
-        \Log::info('验证码已写入', [
+        logger::info('验证码已写入', [
         'key' => "verify_code:{$email}:{$scene}",
         'code' => $code,
         'cached' => Cache::get("verify_code:{$email}:{$scene}")
