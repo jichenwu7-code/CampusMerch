@@ -18,6 +18,7 @@ Route::post('/password/reset', [ZhyController::class, 'resetPassword']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [ZhyController::class, 'logout']);
     Route::put('/my/profile', [ZhyController::class, 'updateProfile']);
+    Route::post('/my/avatar', [ZhyController::class, 'uploadAvatar']);
 });
 // 公共接口
 Route::get('/products', [WjcController::class, 'productList']);
