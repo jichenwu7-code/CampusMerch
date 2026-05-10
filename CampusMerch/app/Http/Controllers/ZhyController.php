@@ -303,24 +303,25 @@ HTML;
     public function updateProfile(Request $request)
     {
         $request->validate([
-            'name' => 'sometimes|string|max:50',
-            'phone' => 'sometimes|string|max:20',
-            'address' => 'sometimes|string|max:255'
+            'name'    => 'sometimes|string|max:50',
+            'phone'   => 'sometimes|string|max:20',
+            'address' => 'sometimes|string|max:255',
         ]);
 
         $user = $request->user();
         $user->update([
-            'name' => $request->name ?? $user->name,
-            'mobile' => $request->phone ?? $user->mobile,
+            'name'    => $request->name ?? $user->name,
+            'mobile'  => $request->phone ?? $user->mobile,
+            'address' => $request->address ?? $user->address,
         ]);
 
         return response()->json([
-            'code' => 200,
+            'code'    => 200,
             'message' => '修改成功',
-            'data' => [
-                'user_id' => $user->id,
-                'update_time' => $user->updated_at->toDateTimeString()
-            ]
+            'data'    => [
+                'user_id'     => $user->id,
+                'update_time' => $user->updated_at->toDateTimeString(),
+            ],
         ]);
     }
     public function uploadAvatar(Request $request)
