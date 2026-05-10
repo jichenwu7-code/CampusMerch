@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Laravelgit\Sanctum\HasApiTokens;
 
 #[Fillable(['name', 'email', 'password', 'role', 'mobile'])]
 #[Hidden(['password', 'remember_token'])]
@@ -19,20 +19,21 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     */
     protected function casts(): array
     {
         return [
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * 覆盖 Sanctum 的默认 token 生成，延长令牌长度至 120 字符。
+     */
     public function createToken(string $name, array $abilities = ['*'])
     {
         $token = $this->tokens()->create([
-            'name' => $name,
-            'token' => hash('sha256', $plainTextToken = Str::random(240)),
+            'name'      => $name,
+            'token'     => hash('sha256', $plainTextToken = Str::random(120)),
             'abilities' => $abilities,
         ]);
 
