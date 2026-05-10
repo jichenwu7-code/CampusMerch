@@ -29,8 +29,9 @@ Route::get('/custom-rules', [WjcController::class, 'customRules']);
 // 管理员接口（需要登录）
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     // 商品相关
+    Route::post('/products', [WjcController::class, 'storeProduct']);
     Route::post('/products/import', [WjcController::class, 'importProducts']);
-    Route::put('/products/{id}', [WjcController::class, 'updateProduct']);
+    Route::post('/products/{id}', [WjcController::class, 'updateProduct']);
     Route::post('/products/stock/batch', [WjcController::class, 'batchUpdateStock']);
 
     // 订单相关
@@ -44,9 +45,7 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     // 统计和日志
     Route::get('/stats', [WjcController::class, 'adminStats']);
     Route::get('/logs', [WjcController::class, 'operationLogs']);
-
 });
-
 // 用户接口（需要登录）
 Route::middleware('auth:sanctum')->group(function () {
     // 1. 创建预订单
@@ -63,4 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/my/collections', [GyzController::class, 'addCollection']);
     // 7. 取消商品收藏
     Route::delete('/my/collections/{productId}', [GyzController::class, 'removeCollection']);
-    });
+    // 8. 上传头像
+    Route::post('/my/avatar', [GyzController::class, 'uploadAvatar']);
+});
+

@@ -26,9 +26,6 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * 覆盖 Sanctum 的默认 token 生成，延长令牌长度至 120 字符。
-     */
     public function createToken(string $name, array $abilities = ['*'])
     {
         $token = $this->tokens()->create([
