@@ -323,4 +323,30 @@ HTML;
             ]
         ]);
     }
+    public function uploadAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => 'required|file|mimes:jpg,jpeg,png|max:5120',
+        ], [
+            'avatar.required' => '请选择头像文件',
+            'avatar.mimes'    => '头像仅支持 JPG、JPEG、PNG 格式',
+            'avatar.max'      => '头像大小不能超过 5MB',
+        ]);
+
+        $user = $request->user();
+
+        $path = $request->file('avatar')->store('avatars', 'public');
+        $url = asset('storage/' . $path);
+
+        $user->update(['avatar_url' => $url]);
+
+        return response()->json([
+            'code'    => 200,
+            'message' => '头像上传成功',
+            'data'    => [
+                'avatar_url'  => $url,
+                'update_time' => $user->updated_at->toDateTimeString(),
+            ],
+        ]);
+    }
 }
